@@ -13,6 +13,7 @@ class placeToPayTest{
 	private $fields;
 	private $placetopay;
 	private $response;
+	private $requestId;
 
 	public function __construct(){
 		
@@ -37,7 +38,7 @@ class placeToPayTest{
 			$this->cancelPay();
 		}
 		else{
-			echo "No hay";
+			$this->processPay();
 		}
 	}
 
@@ -91,7 +92,7 @@ class placeToPayTest{
 		    'expiration' => date('c', strtotime('+1 hour')),
 		    'ipAddress' => '127.0.0.1',
 		    'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',
-		    'returnUrl' => 'http://localhost/place-to-pay-test/index.php?reference' . $reference,
+		    'returnUrl' => 'http://localhost/place-to-pay-test/index.php?reference=' . $reference,
 		    'cancelUrl' => 'http://localhost/place-to-pay-test/index.php?cancelacion'
 		];
 
@@ -100,6 +101,7 @@ class placeToPayTest{
 		    $this->response = $this->placetopay->request($request);
 
 		    if ($this->response->isSuccessful()) {
+		    	$this->requestId = $this->response->requestId();
 		        //Redirect the client to the processUrl or display it on the JS extension
 		        header('Location: ' . $this->response->processUrl());
 		    } else {
@@ -115,9 +117,18 @@ class placeToPayTest{
 
 	public function verifyPay(){
 		
-		echo "Pago realizado </br>";
+		$this->response = $this->placetopay->query($this->requestId);
 
-		echo $this->response->requestId();
+		if ($this->response->isSuccessful()) {
+		    // In order to use the functions please refer to the Dnetix\Redirection\Message\RedirectInformation class
+
+		    if ($this->response->status()->isApproved()) {
+		        echo "Fue aprobada la transaccion";
+		    }
+		} else {
+		    // There was some error with the connection so check the message
+		    print_r($this->response->status()->message() . "\n");
+		}
 	
 	}
 
@@ -129,6 +140,5 @@ class placeToPayTest{
 }
 
 $obj = new placeToPayTest();
-$obj->processPay();
 
 ?>
