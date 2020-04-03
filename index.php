@@ -117,7 +117,7 @@ class placeToPayTest{
 
 	public function verifyPay(){
 		
-		$this->response = $this->placetopay->query($this->requestId);
+		/*$this->response = $this->placetopay->query($this->requestId);
 
 		if ($this->response->isSuccessful()) {
 		    // In order to use the functions please refer to the Dnetix\Redirection\Message\RedirectInformation class
@@ -128,7 +128,9 @@ class placeToPayTest{
 		} else {
 		    // There was some error with the connection so check the message
 		    print_r($this->response->status()->message() . "\n");
-		}
+		}*/
+
+		print_r($this->requestId);
 	
 	}
 
