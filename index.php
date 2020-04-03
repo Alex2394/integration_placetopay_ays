@@ -33,6 +33,12 @@ class placeToPayTest{
 		if(isset($_GET['reference'])){
 			$this->verifyPay();
 		}
+		else if(isset($_GET['cancelacion'])){
+			$this->cancelPay();
+		}
+		else{
+			echo "No hay";
+		}
 	}
 
 	public function processPay(){
@@ -43,35 +49,35 @@ class placeToPayTest{
 		$request = [
 			"locale" => "es_CO",
 		    "payer" => [
-		        "name" => "Alexander",
-		        "surname" => "Molina Cardozo",
-		        "email" => "alexander.molina@naturasoftware.com",
-		        "documentType" => "CC",
-		        "document" => "1070615182",
-		        "mobile" => "3133879594",
-		        "address" => [
-		            "street" => "Cra. 13a # 34-57",
-		            "city" => "Bogota",
-		            "state" => "D.C",
-		            "postalCode" => "110111",
-		            "country" => "CO",
-		            "phone" => "4882435"
+		        'name' => 'Alexander',
+		        'surname' => 'Molina Cardozo',
+		        'email' => 'alexander.molina@naturasoftware.com',
+		        'documentType' => 'CC',
+		        'document' => '1070615182',
+		        'mobile' => '3133879594',
+		        'address' => [
+		            'street' => 'Cra. 13a # 34-57',
+		            'city' => 'Bogota',
+		            'state' => 'D.C',
+		            'postalCode' => '110111',
+		            'country' => 'CO',
+		            'phone' => '4882435'
 		        ]
 		    ],
-		    "buyer" => [
-		        "name" => "Alexander",
-		        "surname" => "Molina Cardozo",
-		        "email" => "alexander.molina@naturasoftware.com",
-		        "documentType" => "CC",
-		        "document" => "1070615182",
-		        "mobile" => "3133879594",
-		        "address" => [
-		            "street" => "Cra. 13a # 34-57",
-		            "city" => "Bogota",
-		            "state" => "D.C",
-		            "postalCode" => "110111",
-		            "country" => "CO",
-		            "phone" => "4882435"
+		    'buyer' => [
+		        'name' => 'Alexander',
+		        'surname' => 'Molina Cardozo',
+		        'email' => 'alexander.molina@naturasoftware.com',
+		        'documentType' => 'CC',
+		        'document' => '1070615182',
+		        'mobile' => '3133879594',
+		        'address' => [
+		            'street' => 'Cra. 13a # 34-57',
+		            'city' => 'Bogota',
+		            'state' => 'D.C',
+		            'postalCode' => '110111',
+		            'country' => 'CO',
+		            'phone' => '4882435'
 		        ]
 		    ],
 		    'payment' => [
@@ -82,11 +88,11 @@ class placeToPayTest{
 		            'total' => 100000,
         		],
     		],
-		    "expiration" => date('c', strtotime('+1 hour')),
-		    "ipAddress" => "127.0.0.1",
-		    "userAgent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36",
-		    "returnUrl" => "http://dnetix.dev/p2p/client",
-		    "cancelUrl" => "https://dnetix.co"
+		    'expiration' => date('c', strtotime('+1 hour')),
+		    'ipAddress' => '127.0.0.1',
+		    'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',
+		    'returnUrl' => 'http://localhost/place-to-pay-test/index.php?reference' . $reference,
+		    'cancelUrl' => 'http://localhost/place-to-pay-test/index.php?cancelacion'
 		];
 
 		try {
@@ -95,7 +101,7 @@ class placeToPayTest{
 
 		    if ($this->response->isSuccessful()) {
 		        //Redirect the client to the processUrl or display it on the JS extension
-		        $this->response->processUrl();
+		        header('Location: ' . $this->response->processUrl());
 		    } else {
 		        // There was some error so check the message
 		        var_dump($this->response->status()->message());
@@ -109,7 +115,16 @@ class placeToPayTest{
 
 	public function verifyPay(){
 		
-		echo "Pago realizado";
+		echo "Pago realizado </br>";
+
+		echo $this->response->requestId();
+	
+	}
+
+	public function cancelPay(){
+
+		echo "Se cancelo el pago";
+	
 	}
 }
 
